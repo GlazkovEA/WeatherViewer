@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">@android:color/black</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#FFFFFF</color>
+    <color name="colorAccentSecond">#448AFF</color>
+    <color name="colorProgressBar">#30448A</color>
+    <color name="darkGrey">@android:color/darker_gray</color>
+    <color name="black">@android:color/black</color>
+    <color name="colorAccentTranperent">#30448AFF</color>
+    <color name="colorTransparentBlack">#DF000000</color>
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorWeekItem">#30448AFF</color>
+</resources>

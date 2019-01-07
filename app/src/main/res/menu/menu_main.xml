@@ -1,0 +1,16 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="homounikumus1.com.myweatherviewer.view.MainActivity">
+
+    <item
+        android:icon="@drawable/ic_place_24dp"
+        android:title=""
+        app:showAsAction="always"
+        android:id="@+id/place"/>
+    <item
+        android:icon="@drawable/ic_town_24dp"
+        android:title=""
+        app:showAsAction="always"
+        android:id="@+id/add_city"/>
+</menu>
