@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".view.AddCityActivity"
+    tools:context=".screen.cities_list_screen.AddCityActivity"
     tools:showIn="@layout/activity_add_city">
 
     <LinearLayout
@@ -34,13 +34,25 @@
             />
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/cities_error"
+        android:gravity="center"
+        android:visibility="invisible"
+        android:layout_margin="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/cities_error"
+        android:textColor="@color/colorWhite"
+        android:textSize="16sp" />
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:id="@+id/city_array"
         android:layout_height="match_parent" />
+
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="vertical"
+        android:visibility="invisible"
         android:animateLayoutChanges="true"
         android:background="@color/colorTransparentBlack"
         android:layout_width="match_parent"

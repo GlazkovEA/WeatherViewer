@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="week_weather_request" type="id" />
+    <item name="one_day_weather_request" type="id" />
+    <item name="cities" type="id" />
+    <item name="time_zone" type="id" />
+</resources>
