@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -109,7 +110,7 @@ public class AddCityActivity extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_add_city);
         ButterKnife.bind(this);
 
-        progressBar.getIndeterminateDrawable().setColorFilter(getColor(R.color.colorProgressBar), android.graphics.PorterDuff.Mode.MULTIPLY);
+       // progressBar.getIndeterminateDrawable().setColorFilter(getColor(R.color.colorProgressBar), android.graphics.PorterDuff.Mode.MULTIPLY);
         // we don't needed to showed the bar because
         // we have all data and no need to update it's
         if (!weatherList.isEmpty()) {
@@ -136,7 +137,6 @@ public class AddCityActivity extends AppCompatActivity implements View.OnClickLi
         placePresenter.init();
         // The delegate for this screen
         CitiesPresenter citiesPresenter = new CitiesPresenter(this, this.getString(R.string.lang));
-        citiesPresenter.init();
 
         mAutocompleteView.setOnItemClickListener(placePresenter.getAutocompleteClickListener());
         fab.setOnClickListener(this);
@@ -146,8 +146,10 @@ public class AddCityActivity extends AppCompatActivity implements View.OnClickLi
         } else {
             if (DatabaseUtils.amountOfElementsInDatabase() == 0) openSearch();
             else {
-                if (DatabaseUtils.checkData()) citiesPresenter.loadCitesWeather();
-                else finish();
+                if (DatabaseUtils.checkData()) {
+                    citiesPresenter.init();
+                    new Handler().postDelayed(citiesPresenter::loadCitesWeather, 100);
+                } else finish();
             }
         }
     }

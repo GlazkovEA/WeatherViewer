@@ -175,3 +175,117 @@ public class DatabaseUtils {
         return Realm.getDefaultInstance().where(Weather.class).findAll().size()>0;
     }
 }
+/**     vectorDrawables.useSupportLibrary = true
+ }
+
+ buildTypes {
+ release {
+ minifyEnabled false
+ proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+ }
+
+ }
+ compileOptions {
+ sourceCompatibility = '1.8'
+ targetCompatibility = '1.8'
+ sourceCompatibility JavaVersion.VERSION_1_8
+ targetCompatibility JavaVersion.VERSION_1_8
+ }
+
+ flavorDimensions "version"
+ productFlavors {
+ prod {
+ dimension "version"
+ applicationIdSuffix ".prod"
+ versionNameSuffix "-prod"
+ }
+
+ mock {
+ dimension "version"
+ applicationIdSuffix ".mock"
+ versionNameSuffix "-mock"
+ }
+ }
+
+ packagingOptions {
+ exclude 'META-INF/DEPENDENCIES'
+ exclude 'META-INF/LICENSE'
+ exclude 'META-INF/LICENSE.txt'
+ exclude 'META-INF/license.txt'
+ exclude 'META-INF/NOTICE'
+ exclude 'META-INF/NOTICE.txt'
+ exclude 'META-INF/notice.txt'
+ exclude 'META-INF/ASL2.0'
+ exclude 'META-INF/rxjava.properties'
+ }
+ }
+
+ import io.realm.transformer.RealmTransformer
+ android.registerTransform(new RealmTransformer())
+
+
+ dependencies {
+ //realm
+ implementation 'io.realm:realm-android-library:1.2.0'
+ implementation 'io.realm:realm-annotations:1.2.0'
+ annotationProcessor "io.realm:realm-annotations-processor:1.2.0"
+ //rx
+ implementation "io.reactivex.rxjava2:rxandroid:2.1.0"
+ implementation "io.reactivex.rxjava2:rxjava:2.2.3"
+
+ implementation 'com.squareup.retrofit2:adapter-rxjava2:2.4.0'
+
+ //glide
+ implementation 'com.github.bumptech.glide:glide:4.4.0'
+ implementation 'com.google.android.gms:play-services-places:16.0.0'
+ annotationProcessor 'com.github.bumptech.glide:compiler:4.4.0'
+
+ implementation 'de.hdodenhof:circleimageview:2.2.0'
+ //cardview
+ ///noinspection GradleCompatible
+ implementation 'com.android.support:cardview-v7:28.0.0'
+ implementation 'com.android.support:recyclerview-v7:28.0.0'
+ implementation 'com.google.android.gms:play-services-location:16.0.0'
+ implementation fileTree(include: ['*.jar'], dir: 'libs')
+ //noinspection GradleCompatible
+ implementation 'com.android.support:appcompat-v7:28.0.0'
+ implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+ implementation 'com.android.support:design:28.0.0'
+ testImplementation 'junit:junit:4.12'
+ androidTestImplementation 'com.android.support.test:runner:1.0.2'
+ androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
+ implementation "com.squareup.retrofit2:retrofit:2.4.0"
+ implementation "com.squareup.retrofit2:converter-gson:2.3.0"
+
+ implementation "com.squareup.okhttp3:okhttp:3.10.0"
+ implementation "com.squareup.okhttp3:logging-interceptor:3.6.0"
+
+ implementation "com.jakewharton:butterknife:8.5.0"
+ annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.0'
+
+ //module
+ implementation project(':data')
+
+
+ //tests
+ testImplementation "junit:junit:4.12"
+ testImplementation "org.mockito:mockito-core:1.10.19"
+ testImplementation "org.powermock:powermock-api-mockito:1.6.5"
+ testImplementation "org.powermock:powermock-module-junit4:1.6.5"
+
+ //maybe delete it
+ testImplementation("org.robolectric:robolectric:3.2.1") {
+ exclude group: 'commons-logging', module: 'commons-logging'
+ exclude group: 'org.apache.httpcomponents', module: 'httpclient'
+ }
+
+ androidTestImplementation "com.android.support.test:runner:1.0.2"
+ androidTestImplementation "com.android.support.test:rules:1.0.2"
+ androidTestImplementation "com.android.support.test.espresso:espresso-core:3.0.2"
+ androidTestImplementation "com.android.support.test.espresso:espresso-intents:3.0.2"
+ androidTestImplementation "com.android.support.test.espresso:espresso-contrib:3.0.2"
+
+ }
+
+ */

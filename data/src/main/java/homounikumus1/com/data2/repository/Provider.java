@@ -1,6 +1,8 @@
 package homounikumus1.com.data2.repository;
 
 public class Provider {
+    private static StartRepository startRepository;
+
     /**
      * Link for access to weatherRepository
      */
@@ -28,11 +30,21 @@ public class Provider {
         return weatherRepository;
     }
 
+    public static StartRepository getStartRepository() {
+        if (startRepository==null)
+            startRepository = new StartRepository();
+        return startRepository;
+    }
+
     public static void setWeatherRepository (WeatherRepository repository) {
         weatherRepository = repository;
     }
 
     public static void setTimeZoneRepository (TimeZoneRepository repository) {
         timeZoneRepository = repository;
+    }
+
+    public static void setStartRepository(StartRepository startRepository) {
+        Provider.startRepository = startRepository;
     }
 }

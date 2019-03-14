@@ -1,9 +1,13 @@
 package homounikumus1.com.myweatherviewer.screen.main_screen;
 
+import android.annotation.SuppressLint;
+import android.os.Handler;
 import android.support.annotation.NonNull;
+
 
 import homounikumus1.com.data2.model.weather.Weather;
 import homounikumus1.com.data2.repository.Provider;
+import homounikumus1.com.data2.repository.StartRepository;
 import homounikumus1.com.myweatherviewer.R;
 import homounikumus1.com.myweatherviewer.loader.LifecycleHandler;
 import homounikumus1.com.myweatherviewer.utils.DatabaseUtils;
@@ -22,11 +26,15 @@ public class MainPresenter {
 
     /**
      * init delegate - if it is first start - start activity with search window
+     *
      * @param lang - localization
      */
+    @SuppressLint("CheckResult")
     public void init(String lang) {
         if (DatabaseUtils.isFirstStart()) {
-            start(false, lang);
+            final Disposable subscribe = Provider.getStartRepository().getOneDayWeather().subscribe(mView::showTodayWeather, throwable -> { });
+            final Disposable subscribe2 = Provider.getStartRepository().getWeekWeather().subscribe(mView::showWeekWeather, throwable -> { });
+            new Handler().postDelayed(()->{start(false, lang);}, 100);
         } else {
             mView.startSearchActivity();
         }
@@ -34,24 +42,28 @@ public class MainPresenter {
 
     /**
      * start main screen
+     *
      * @param update - if true it's from refresh
-     * @param lang - localization
+     * @param lang   - localization
      */
     public void start(boolean update, String lang) {
         Weather weather = DatabaseUtils.getLastSavedObject();
         if (weather != null) {
+            //new Handler().postDelayed(()->{
             getOneDayWeather(weather.getLat(), weather.getLon(), weather.getCity(), weather.getTimeZone(), update, lang);
             getWeekWeather(weather.getLat(), weather.getLon(), weather.getTimeZone(), update, lang);
+            //}, 10);
         }
     }
 
     /**
      * request to update
-     * @param lat - latitude
-     * @param lon - longitude
-     * @param city - city name
+     *
+     * @param lat      - latitude
+     * @param lon      - longitude
+     * @param city     - city name
      * @param timeZone - time zone for the date
-     * @param lang - localization
+     * @param lang     - localization
      */
     public void update(double lat, double lon, String city, String timeZone, String lang) {
         getOneDayWeather(lat, lon, city, timeZone, true, lang);

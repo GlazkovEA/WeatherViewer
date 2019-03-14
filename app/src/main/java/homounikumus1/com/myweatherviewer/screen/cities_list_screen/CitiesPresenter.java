@@ -4,6 +4,7 @@ import java.util.Objects;
 
 import homounikumus1.com.data2.model.weather.CitiesArrayWeather;
 import homounikumus1.com.data2.repository.Provider;
+import homounikumus1.com.data2.repository.StartRepository;
 import homounikumus1.com.myweatherviewer.utils.DatabaseUtils;
 import io.reactivex.disposables.Disposable;
 
@@ -20,6 +21,22 @@ public class CitiesPresenter {
     public void init() {
         // get the string with all saved cities id's
         data = DatabaseUtils.loadCitesWeather();
+        final Disposable subscribe = Provider.getStartRepository().getCityArray()
+                .subscribe(w -> {
+                    for (CitiesArrayWeather city : w) {
+                        String id = city.getId();
+                        // take coordinates assigned to this city and previously stored in the database
+                        // that's why the weather's API data not correlated with googleAPI data
+                        String[] latLon = Objects.requireNonNull(DatabaseUtils.citesCoordinates.get(DatabaseUtils.cites.get(id))).split("&");
+
+                        city.setCity(DatabaseUtils.cites.get(id));
+                        city.setLat(Double.parseDouble(latLon[0]));
+                        city.setLon(Double.parseDouble(latLon[1]));
+                        city.setTimeZone(DatabaseUtils.timeZoneMap.get(id));
+                    }
+                    clView.showCitiesWeather(w);
+                }, throwable -> {
+                });
     }
 
     public void loadCitesWeather() {
