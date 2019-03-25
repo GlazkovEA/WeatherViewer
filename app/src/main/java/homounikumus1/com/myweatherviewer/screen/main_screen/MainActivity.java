@@ -39,11 +39,10 @@ import homounikumus1.com.data2.model.weather.Weather;
 import homounikumus1.com.data2.model.weather.WeekWeather;
 import homounikumus1.com.myweatherviewer.loader.LifecycleHandler;
 import homounikumus1.com.myweatherviewer.loader.LoaderLifecycleHandler;
-import homounikumus1.com.myweatherviewer.utils.DatabaseUtils;
+import homounikumus1.com.myweatherviewer.screen.sync_screen.SyncSettingsActivity;
 import homounikumus1.com.myweatherviewer.R;
 import homounikumus1.com.myweatherviewer.screen.cities_list_screen.AddCityActivity;
 import homounikumus1.com.myweatherviewer.utils.LoadImageUtils;
-
 
 public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, MView {
     private static final String TAG = "Main_Action";
@@ -102,12 +101,23 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
      * Delegate
      */
     private MainPresenter presenter;
+    private boolean isRecreate;
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean("isRecreate", isRecreate);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        if (savedInstanceState!=null) {
+            isRecreate = true;
+        }
 
         progressBar.getIndeterminateDrawable().setColorFilter(getColor(R.color.colorProgressBar), android.graphics.PorterDuff.Mode.MULTIPLY);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -132,7 +142,13 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         LifecycleHandler handler = LoaderLifecycleHandler.create(getSupportLoaderManager());
         //Initialize delegate
         presenter = new MainPresenter(this, handler);
-        presenter.init(this.getString(R.string.lang));
+        presenter.init(this.getString(R.string.lang), isRecreate);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        presenter.destroy();
     }
 
     @Override
@@ -155,7 +171,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         //if explanation was showed and user denied it - hide menu item
-        if (DatabaseUtils.isExplanationShowed(this)) {
+        if (presenter.isExplanationShowed()) {
             menu.getItem(0).setVisible(false);
         }
         return true;
@@ -186,7 +202,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 assert cm != null;
                 NetworkInfo netInfo = cm.getActiveNetworkInfo();
                 if (netInfo != null && netInfo.isConnectedOrConnecting()) {
-                    if (!DatabaseUtils.isExplanationShowed(this))
+                    if (!presenter.isExplanationShowed())
                         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, 1);
                     else {
                         Snackbar.make(mainWeatherView, getString(R.string.geodata_apsent), Snackbar.LENGTH_LONG).setAction("Action", null).show();
@@ -195,6 +211,10 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 } else {
                     Toast.makeText(this, getString(R.string.no_connection), Toast.LENGTH_LONG).show();
                 }
+                break;
+            case R.id.settings:
+                Intent settings = new Intent(this, SyncSettingsActivity.class);
+                startActivity(settings);
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -205,7 +225,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         if (data == null) {
             return;
         }
-        presenter.update(data.getDoubleExtra("lat", 0), data.getDoubleExtra("lon", 0), data.getStringExtra("city"), data.getStringExtra("time"), this.getString(R.string.lang));
+        new Handler().post(()->{presenter.update(data.getDoubleExtra("lat", 0), data.getDoubleExtra("lon", 0), data.getStringExtra("city"), data.getStringExtra("time"), this.getString(R.string.lang));});
     }
 
     @Override
@@ -237,12 +257,12 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 .setMessage(getString(R.string.explanation))
                 .setNegativeButtonIcon(getDrawable(R.drawable.ic_check_24dp))
                 .setNegativeButton("", (dialog, which) -> {
-                    DatabaseUtils.explanationShowed(this, true);
-                    presenter.init(this.getString(R.string.lang));
+                    presenter.explanationShowed(true);
+                    presenter.init(this.getString(R.string.lang), isRecreate);
                 })
                 .setPositiveButtonIcon(getDrawable(R.drawable.ic_cancel_24dp))
                 .setPositiveButton("", (dialog, which) -> {
-                    DatabaseUtils.explanationShowed(this, false);
+                    presenter.explanationShowed(false);
                     ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, 1);
                 })
                 .setIcon(android.R.drawable.ic_dialog_alert)
@@ -350,5 +370,4 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             dialog.show();
         }
     };
-
 }

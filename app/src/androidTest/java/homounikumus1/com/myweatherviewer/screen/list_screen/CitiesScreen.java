@@ -169,7 +169,7 @@ public class CitiesScreen {
     }
 
     /**
-     * The last test
+     * The third test
      * @throws Exception
      */
     @Test
@@ -205,13 +205,10 @@ public class CitiesScreen {
             mActivityRule.wait(4000);
         }
         onView(withId(R.id.city)).check(matches(withText("Moscow")));
-
-        Realm.getDefaultInstance().executeTransaction(realm2 -> realm2.deleteAll());
-        DatabaseUtils.clean();
     }
 
     /**
-     * The fifth test
+     * The fourth test
      * @throws Exception
      */
     @Test
@@ -266,7 +263,7 @@ public class CitiesScreen {
     }
 
     /**
-     * The four test
+     * The last test
      * @throws Exception
      */
     @Test

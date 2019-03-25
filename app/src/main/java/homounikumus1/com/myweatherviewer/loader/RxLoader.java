@@ -2,6 +2,7 @@ package homounikumus1.com.myweatherviewer.loader;
 
 import android.support.annotation.Nullable;
 import android.support.v4.content.Loader;
+import android.util.Log;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -11,6 +12,7 @@ import io.reactivex.observers.DisposableObserver;
 import static homounikumus1.com.myweatherviewer.WeatherApp.getAppContext;
 
 public class RxLoader<T> extends Loader<T> {
+    private static String TAG = "my_loader";
     private Observable<T> observable;
     private Disposable disposable;
     private boolean mIsErrorReported = false;
@@ -28,6 +30,7 @@ public class RxLoader<T> extends Loader<T> {
 
     @Override
     protected void onStartLoading() {
+        Log.d(TAG, "start");
         super.onStartLoading();
         if (mEmitter != null && !mIsCompleted && mError == null)
             disposable = observable.subscribeWith(new Loader());
@@ -35,6 +38,7 @@ public class RxLoader<T> extends Loader<T> {
 
     @Override
     protected void onReset() {
+        Log.d(TAG, "reset");
         if (disposable != null) {
             disposable.dispose();
             disposable = null;
@@ -50,6 +54,7 @@ public class RxLoader<T> extends Loader<T> {
     }
 
     Observable<T> createObservable() {
+        Log.d(TAG, "create");
         return Observable.create((ObservableEmitter<T> emitter) -> {
             mEmitter = emitter;
             mEmitter.setDisposable(disposable);
@@ -76,12 +81,14 @@ public class RxLoader<T> extends Loader<T> {
     private class Loader extends DisposableObserver<T> {
         @Override
         public void onNext(T t) {
+            Log.d(TAG, "onNext");
             mData = t;
             if (mEmitter != null) mEmitter.onNext(t);
         }
 
         @Override
         public void onError(Throwable throwable) {
+            Log.d(TAG, "onError");
             mError = throwable;
             if (mEmitter != null) {
                 mEmitter.onError(throwable);
@@ -91,6 +98,7 @@ public class RxLoader<T> extends Loader<T> {
 
         @Override
         public void onComplete() {
+            Log.d(TAG, "onComplete");
             mIsCompleted = true;
             if (mEmitter != null) mEmitter.onComplete();
         }

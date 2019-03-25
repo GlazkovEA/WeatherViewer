@@ -176,28 +176,30 @@ public class DatabaseUtils {
         }
     }
 
-    public static void explanationShowed(AppCompatActivity activity, boolean exp) {
-        if (amountOfElementsInDatabase==null) {
-            SharedPreferences sPref = activity.getPreferences(MODE_PRIVATE);
-            SharedPreferences.Editor ed = sPref.edit();
-            ed.putBoolean("explanation", exp);
-            ed.apply();
-        }
+    public static boolean isShowNotification () {
+
+
+        return false;
     }
 
-    public static boolean isExplanationShowed(AppCompatActivity activity) {
-        if (amountOfElementsInDatabase==null) {
-            SharedPreferences sPref = activity.getPreferences(MODE_PRIVATE);
-            return sPref.getBoolean("explanation", false);
-        } else
-            return false;
+    public static void setIsNotificationShow (boolean isShow) {
+
+    }
+
+    public static void explanationShowed(boolean exp) {
+
+
+    }
+
+    public static boolean isExplanationShowed() {
+
+        return false;
     }
 
     public static boolean isFirstStart() {
         if (amountOfElementsInDatabase!=null) {
             return amountOfElementsInDatabase > 0;
         } else {
-            Log.d("Need_This", "here? = " + Realm.getDefaultInstance().where(Weather.class).findAll().size());
             return Realm.getDefaultInstance().where(Weather.class).findAll().size()>0;
         }
     }

@@ -42,4 +42,16 @@
     <string name="week_error">При обращении к серверу произошла ошибка, данные о погоде за неделю не были загружены</string>
     <string name="cities_error">При обращении к серверу произошла ошибка, данные о погоде в списке ваших городов не были загружены</string>
     <string name="time_zone_exception">При обращении к серверу произошла ошибка, данные не были получены, повторите свою попытку позже</string>
+    <string name="interval">Интервал</string>
+    <string name="auto">Автоматически</string>
+    <string name="sync_summary">обновление в соотвествии с выбранным интервалом времени</string>
+    <string name="sync">Синхронизация</string>
+    <string name="channel_name">my_channel_02</string>
+    <string name="cities">Список городов</string>
+    <string name="geo">Геолокация</string>
+    <string name="geo_summary">Включить геолокацию</string>
+    <string name="notification">Уведомления</string>
+    <string name="notification_summary">Уведомления о погоде в текущей геолокации в соотвествии с выбранным интервалом, если геолокация доступна</string>
+    <string name="sync_settings">Настройки синхронизации</string>
+    <string name="geo_switch_explanetion">Предоставленные разрешения могут быть отозваны в настройках устройства</string>
 </resources>

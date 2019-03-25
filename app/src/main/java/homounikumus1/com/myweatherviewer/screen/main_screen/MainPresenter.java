@@ -4,10 +4,8 @@ import android.annotation.SuppressLint;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 
-
 import homounikumus1.com.data2.model.weather.Weather;
 import homounikumus1.com.data2.repository.Provider;
-import homounikumus1.com.data2.repository.StartRepository;
 import homounikumus1.com.myweatherviewer.R;
 import homounikumus1.com.myweatherviewer.loader.LifecycleHandler;
 import homounikumus1.com.myweatherviewer.utils.DatabaseUtils;
@@ -18,6 +16,12 @@ public class MainPresenter {
     private static final String TAG = "MainPresenter";
     private final LifecycleHandler handler;
     private final MView mView;
+    private Handler refreshHandler;
+    private Handler startHandler;
+    private Disposable startSubscriber;
+    private Disposable startSubscriberWeek;
+    private Disposable todayWeather;
+    private Disposable weekWeather;
 
     public MainPresenter(@NonNull MView mView, @NonNull LifecycleHandler handler) {
         this.mView = mView;
@@ -30,14 +34,44 @@ public class MainPresenter {
      * @param lang - localization
      */
     @SuppressLint("CheckResult")
-    public void init(String lang) {
+    public void init(String lang, boolean recreate) {
         if (DatabaseUtils.isFirstStart()) {
-            final Disposable subscribe = Provider.getStartRepository().getOneDayWeather().subscribe(mView::showTodayWeather, throwable -> { });
-            final Disposable subscribe2 = Provider.getStartRepository().getWeekWeather().subscribe(mView::showWeekWeather, throwable -> { });
-            new Handler().postDelayed(()->{start(false, lang);}, 100);
+              if (recreate) {
+                  startHandler = new Handler();
+                  startHandler.post(()->{
+                      start(false, lang);
+                  });
+             } else {
+            startHandler = new Handler();
+            startHandler.post(() -> {
+                startSubscriber = Provider.getStartRepository().getOneDayWeather().subscribe(mView::showTodayWeather, throwable -> {
+                });
+                startSubscriberWeek = Provider.getStartRepository().getWeekWeather().subscribe(mView::showWeekWeather, throwable -> {
+                });
+            });
+            refreshHandler = new Handler();
+            refreshHandler.postDelayed(() -> {
+                start(false, lang);
+            }, 200);
+             }
         } else {
             mView.startSearchActivity();
         }
+    }
+
+    public void destroy() {
+        if (startHandler !=null)
+            startHandler.removeCallbacksAndMessages(null);
+        if (refreshHandler != null)
+            refreshHandler.removeCallbacksAndMessages(null);
+        if (startSubscriber != null)
+            startSubscriber.dispose();
+        if (startSubscriberWeek != null)
+            startSubscriberWeek.dispose();
+        if (todayWeather != null)
+            todayWeather.dispose();
+        if (weekWeather != null)
+            weekWeather.dispose();
     }
 
     /**
@@ -49,10 +83,8 @@ public class MainPresenter {
     public void start(boolean update, String lang) {
         Weather weather = DatabaseUtils.getLastSavedObject();
         if (weather != null) {
-            //new Handler().postDelayed(()->{
-            getOneDayWeather(weather.getLat(), weather.getLon(), weather.getCity(), weather.getTimeZone(), update, lang);
             getWeekWeather(weather.getLat(), weather.getLon(), weather.getTimeZone(), update, lang);
-            //}, 10);
+            getOneDayWeather(weather.getLat(), weather.getLon(), weather.getCity(), weather.getTimeZone(), update, lang);
         }
     }
 
@@ -66,12 +98,12 @@ public class MainPresenter {
      * @param lang     - localization
      */
     public void update(double lat, double lon, String city, String timeZone, String lang) {
-        getOneDayWeather(lat, lon, city, timeZone, true, lang);
         getWeekWeather(lat, lon, timeZone, true, lang);
+        getOneDayWeather(lat, lon, city, timeZone, true, lang);
     }
 
     private void getWeekWeather(double lat, double lon, String timeZone, boolean update, String lang) {
-        Disposable weekWeather = Provider.getWaetherRepository().getWeekWeather(lat, lon, timeZone, lang)
+        weekWeather = Provider.getWaetherRepository().getWeekWeather(lat, lon, timeZone, lang)
                 // when subscribe on observable - show progress bar
                 .doOnSubscribe(disposable -> {
                     mView.showLoading();
@@ -81,7 +113,7 @@ public class MainPresenter {
                 // handle life cycle
                 .compose(handler.choice(update, R.id.week_weather_request))
                 // show weather or error
-                .cache()
+                //.cache()
                 .subscribe(mView::showWeekWeather, throwable -> {
                     handler.clear(R.id.week_weather_request);
                     mView.showError(0);
@@ -89,7 +121,11 @@ public class MainPresenter {
     }
 
     private void getOneDayWeather(double lat, double lon, String cityName, String timeZone, boolean update, String lang) {
-        Disposable todayWeather = Provider.getWaetherRepository().getOneDayWeather(lat, lon, cityName, timeZone, lang)
+        todayWeather = Provider.getWaetherRepository().getOneDayWeather(lat, lon, cityName, timeZone, lang)
+                // when subscribe on observable - show progress bar
+                .doOnSubscribe(disposable -> {
+                    mView.showLoading();
+                })
                 .compose(handler.choice(update, R.id.one_day_weather_request))
                 .subscribe(weather -> {
                     DatabaseUtils.checkIsAlreadyExist(weather);
@@ -109,5 +145,14 @@ public class MainPresenter {
             update(latLon[0], latLon[1], null, null, lang);
         else
             mView.showGeoExplanation();
+    }
+
+
+    public boolean isExplanationShowed () {
+        return DatabaseUtils.isExplanationShowed();
+    }
+
+    public void explanationShowed(boolean b) {
+        DatabaseUtils.explanationShowed(b);
     }
 }

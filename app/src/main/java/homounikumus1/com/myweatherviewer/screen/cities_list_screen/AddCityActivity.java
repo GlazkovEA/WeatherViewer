@@ -38,6 +38,7 @@ import homounikumus1.com.myweatherviewer.loader.LoaderLifecycleHandler;
 import homounikumus1.com.myweatherviewer.R;
 import homounikumus1.com.myweatherviewer.screen.cities_list_screen.search.AView;
 import homounikumus1.com.myweatherviewer.screen.cities_list_screen.search.PlacePresenter;
+import homounikumus1.com.myweatherviewer.screen.main_screen.MainPresenter;
 import homounikumus1.com.myweatherviewer.utils.DatabaseUtils;
 
 
@@ -83,6 +84,7 @@ public class AddCityActivity extends AppCompatActivity implements View.OnClickLi
      * The delegate
      */
     private PlacePresenter placePresenter;
+    private Handler udpateDataHandler;
 
     /**
      * Saved list of cities weather for recreate
@@ -92,7 +94,7 @@ public class AddCityActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList("array_list", weatherList);
+        //outState.putParcelableArrayList("array_list", weatherList);
         outState.putBoolean("isOpen", IS_OPEN);
     }
 
@@ -103,21 +105,13 @@ public class AddCityActivity extends AppCompatActivity implements View.OnClickLi
 
         // if activity was recreate load data
         if (savedInstanceState != null) {
-            weatherList.addAll(Objects.requireNonNull(savedInstanceState.getParcelableArrayList("array_list")));
+           // weatherList.addAll(Objects.requireNonNull(savedInstanceState.getParcelableArrayList("array_list")));
             IS_OPEN = savedInstanceState.getBoolean("isOpen");
         }
 
         setContentView(R.layout.activity_add_city);
         ButterKnife.bind(this);
 
-       // progressBar.getIndeterminateDrawable().setColorFilter(getColor(R.color.colorProgressBar), android.graphics.PorterDuff.Mode.MULTIPLY);
-        // we don't needed to showed the bar because
-        // we have all data and no need to update it's
-        if (!weatherList.isEmpty()) {
-            bar.setVisibility(View.INVISIBLE);
-        }
-        // if cities list wasn't loaded load
-        // if it was update presenterCash
         cityArray.setLayoutManager(new LinearLayoutManager(this));
         cityArrayAdapter = new CityArrayAdapter(this, weatherList);
         cityArray.setAdapter(cityArrayAdapter);
@@ -139,19 +133,25 @@ public class AddCityActivity extends AppCompatActivity implements View.OnClickLi
         CitiesPresenter citiesPresenter = new CitiesPresenter(this, this.getString(R.string.lang));
 
         mAutocompleteView.setOnItemClickListener(placePresenter.getAutocompleteClickListener());
+        mAutocompleteView.setThreshold(3);
         fab.setOnClickListener(this);
 
-        if (!weatherList.isEmpty()) {
+        if (DatabaseUtils.amountOfElementsInDatabase() == 0) openSearch();
+        else {
             if (IS_OPEN) openSearch();
-        } else {
-            if (DatabaseUtils.amountOfElementsInDatabase() == 0) openSearch();
-            else {
-                if (DatabaseUtils.checkData()) {
-                    citiesPresenter.init();
-                    new Handler().postDelayed(citiesPresenter::loadCitesWeather, 100);
-                } else finish();
-            }
+            if (DatabaseUtils.checkData()) {
+                citiesPresenter.init();
+                udpateDataHandler = new Handler();
+                udpateDataHandler.postDelayed(citiesPresenter::loadCitesWeather, 200);
+            } else finish();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (udpateDataHandler!=null)
+            udpateDataHandler.removeCallbacksAndMessages(null);
     }
 
     @Override

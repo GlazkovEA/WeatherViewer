@@ -6,13 +6,21 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+import homounikumus1.com.myweatherviewer.WeatherApp;
+import homounikumus1.com.myweatherviewer.screen.main_screen.MainActivity;
 
 import static homounikumus1.com.myweatherviewer.WeatherApp.getAppContext;
 
@@ -21,6 +29,7 @@ public class LocationUtils implements LocationListener {
      * The device location saved in this variable
      */
     public static Location location;
+    private static double[] coordinates = null;
 
     public static void SetUpLocationListener(Context context) {
         // init location service
@@ -70,29 +79,51 @@ public class LocationUtils implements LocationListener {
     }
 
     public static double[] getCoordinates() {
+        new LooperThread().start();
 
-        LocationUtils.SetUpLocationListener(getAppContext());
+        new Thread(() -> {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            double[] cords = new double[2];
 
-        double[] cords = new double[2];
-        // get current location
-        if (LocationUtils.location != null) {
-            cords[0] = LocationUtils.location.getLatitude();
-            cords[1] = LocationUtils.location.getLongitude();
+            if (LocationUtils.location != null) {
+                cords[0] = LocationUtils.location.getLatitude();
+                cords[1] = LocationUtils.location.getLongitude();
 
-            // rounds the latitude and longitude value to two decimal places as it uses the weatherAPI
-            double latRound = new BigDecimal(cords[0]).setScale(3, RoundingMode.DOWN).doubleValue();
-            double lonRound = new BigDecimal(cords[1]).setScale(3, RoundingMode.DOWN).doubleValue();
+                // rounds the latitude and longitude value to two decimal places as it uses the weatherAPI
+                double latRound = new BigDecimal(cords[0]).setScale(3, RoundingMode.DOWN).doubleValue();
+                double lonRound = new BigDecimal(cords[1]).setScale(3, RoundingMode.DOWN).doubleValue();
 
-            if (latRound != 0.0 && lonRound != 0.0)
-                return new double[]{latRound, lonRound};
-            else
-                return null;
+                if (latRound != 0.0 && lonRound != 0.0)
+                    coordinates = new double[]{latRound, lonRound};
+            }
+        }).start();
 
+        try {
+            Thread.sleep(600);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
-        // if for some reason we had'n data return - null
-        return null;
+
+        return coordinates;
     }
 
+
+    static class LooperThread extends Thread {
+        public void run() {
+            Looper.prepare();
+            LocationUtils.SetUpLocationListener(getAppContext());
+            try {
+                Thread.sleep(600);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            Looper.loop();
+        }
+    }
 
     // if locaion changed - update it
     @Override

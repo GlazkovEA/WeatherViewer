@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="auto_sync_intervals">
+        <item>Каждый час</item>
+        <item>Каждые три часа</item>
+        <item>Два раза в день</item>
+        <item>Один раз в день</item>
+    </string-array>
+
+    <string-array name="auto_sync_interval_values">
+        <item>3600</item>
+        <item>10800</item>
+        <item>43200</item>
+        <item>86400</item>
+    </string-array>
+
+    <string name="auto_sync_interval_default">43200</string>
+</resources>

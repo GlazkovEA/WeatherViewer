@@ -10,7 +10,12 @@
         android:id="@+id/place"/>
     <item
         android:icon="@drawable/ic_town_24dp"
-        android:title=""
-        app:showAsAction="always"
+        android:title="@string/cities"
+        app:showAsAction="ifRoom"
         android:id="@+id/add_city"/>
+    <item
+        android:icon="@drawable/ic_settings_black_24dp"
+        android:title="@string/action_settings"
+        app:showAsAction="never"
+        android:id="@+id/settings"/>
 </menu>

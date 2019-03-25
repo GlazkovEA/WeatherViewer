@@ -1,6 +1,7 @@
 package homounikumus1.com.data2.repository;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -85,7 +86,6 @@ public class WeatherRepository implements WeatherRepositoryInterface {
                     Realm realm = Realm.getDefaultInstance();
                     RealmResults<WeekWeather> results = realm.where(WeekWeather.class).findAll();
                     List<WeekWeather> list = realm.copyFromRealm(results);//new ArrayList<>();//realm.copyFromRealm(results);
-
                     if (list.size() > 0)
                         list.get(0).setEx(true);
 
@@ -103,7 +103,6 @@ public class WeatherRepository implements WeatherRepositoryInterface {
     @Override
     public Observable<Weather> getOneDayWeather(double lat, double lon, String cityName, String timeZone, String lang) {
         return ApiFactory.getWeatherService().getWeatherByCoordinates(lat, lon, lang)
-
                 .map(city -> {
                     return getTodaysWeather(city, lat, lon, cityName, timeZone);
                 })

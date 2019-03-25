@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen  xmlns:android="http://schemas.android.com/apk/res/android"
+    android:persistent="true">
+    <PreferenceCategory android:title="@string/action_settings" />
+    <PreferenceScreen
+        android:key="KEY_AUTO_SYNC"
+        android:summary="@string/sync_summary"
+        android:title="@string/sync">
+        <intent
+            android:action="ACTION_SYNC_SETTINGS"
+            android:targetClass="homounikumus1.com.myweatherviewer.screen.sync_screen.SyncSettingsActivity"
+            android:targetPackage="homounikumus1.com.myweatherviewer" />
+    </PreferenceScreen>
+</PreferenceScreen>

@@ -54,7 +54,7 @@ public class MainScreen {
     @Test
     public void testInitEmptyDatabase () throws Exception {
         DatabaseUtils.setAmountOfElementsInDatabase(0);
-        presenter.init("ru");
+        presenter.init("ru", false);
         Mockito.verify(mView).startSearchActivity();
     }
 
@@ -65,11 +65,12 @@ public class MainScreen {
         DatabaseUtils.setAmountOfElementsInDatabase(10);
         WeatherRepository weatherRepository = new TestWeatherRepository(weather, weathers);
         Provider.setWeatherRepository(weatherRepository);
-        presenter.init("ru");
+        //presenter.init("ru");
+        presenter.start(false, "ru");
 
         Mockito.verify(mView, times(1)).showTodayWeather(weather);
         Mockito.verify(mView, times(1)).showWeekWeather(weathers);
-        Mockito.verify(mView, times(1)).showLoading();
+        Mockito.verify(mView, times(2)).showLoading();
         Mockito.verify(mView, times(1)).hideLoading();
         Mockito.verify(mView, times(0)).showError(0);
 
@@ -105,7 +106,7 @@ public class MainScreen {
 
         Mockito.verify(mView, times(1)).showTodayWeather(weather);
         Mockito.verify(mView, times(1)).showWeekWeather(weathers);
-        Mockito.verify(mView, times(1)).showLoading();
+        Mockito.verify(mView, times(2)).showLoading();
         Mockito.verify(mView, times(1)).hideLoading();
         Mockito.verify(mView, times(0)).showError(0);
 
@@ -119,12 +120,13 @@ public class MainScreen {
         DatabaseUtils.setAmountOfElementsInDatabase(10);
         WeatherRepository weatherRepository = new TestWeatherRepository(weather, weathers);
         Provider.setWeatherRepository(weatherRepository);
-        presenter.init("ru");
+        presenter.start(false, "ru");
+        //presenter.init("ru");
         presenter.update(0,0,"EKB","", "ru");
 
         Mockito.verify(mView, times(2)).showTodayWeather(weather);
         Mockito.verify(mView, times(2)).showWeekWeather(weathers);
-        Mockito.verify(mView, times(2)).showLoading();
+        Mockito.verify(mView, times(4)).showLoading();
         Mockito.verify(mView, times(2)).hideLoading();
         Mockito.verify(mView, times(0)).showError(0);
 
@@ -136,12 +138,13 @@ public class MainScreen {
         DatabaseUtils.setAmountOfElementsInDatabase(10);
         WeatherRepository weatherRepository = new TestWeatherRepository(null, null);
         Provider.setWeatherRepository(weatherRepository);
-        presenter.init("ru");
+        presenter.start(false, "ru");
+        //presenter.init("ru");
         presenter.update(0,0,"EKB","", "ru");
 
         Mockito.verify(mView, times(0)).showTodayWeather(null);
         Mockito.verify(mView, times(0)).showWeekWeather(null);
-        Mockito.verify(mView, times(2)).showLoading();
+        Mockito.verify(mView, times(4)).showLoading();
         Mockito.verify(mView, times(2)).hideLoading();
         Mockito.verify(mView, times(2)).showError(0);
         Mockito.verify(mView, times(2)).showError(1);
@@ -154,7 +157,8 @@ public class MainScreen {
         DatabaseUtils.setAmountOfElementsInDatabase(10);
         WeatherRepository weatherRepository = new TestWeatherRepository(null, new ArrayList<>());
         Provider.setWeatherRepository(weatherRepository);
-        presenter.init("ru");
+        presenter.start(false, "ru");
+        //presenter.init("ru");
 
         WeatherRepository weatherRepository2 = new TestWeatherRepository(new Weather(), new ArrayList<>());
         Provider.setWeatherRepository(weatherRepository2);
@@ -163,7 +167,7 @@ public class MainScreen {
         if (((TestWeatherRepository) weatherRepository).weather!=null)
             Mockito.verify(mView, times(1)).showTodayWeather(new Weather());
         Mockito.verify(mView, times(2)).showWeekWeather(new ArrayList<>());
-        Mockito.verify(mView, times(2)).showLoading();
+        Mockito.verify(mView, times(4)).showLoading();
         Mockito.verify(mView, times(2)).hideLoading();
         Mockito.verify(mView, times(1)).showError(1);
 
@@ -177,13 +181,14 @@ public class MainScreen {
         LocationUtils.setIsMock(true);
         WeatherRepository weatherRepository = new TestWeatherRepository(weather, weathers);
         Provider.setWeatherRepository(weatherRepository);
-        presenter.init("ru");
+        presenter.start(false, "ru");
+        //presenter.init("ru");
         LocationUtils.setCoordinates(new double[]{1,2});
         presenter.getPlace("ru");
 
         Mockito.verify(mView, times(2)).showTodayWeather(weather);
         Mockito.verify(mView, times(2)).showWeekWeather(weathers);
-        Mockito.verify(mView, times(2)).showLoading();
+        Mockito.verify(mView, times(4)).showLoading();
         Mockito.verify(mView, times(2)).hideLoading();
         Mockito.verify(mView, times(0)).showError(0);
         Mockito.verify(mView, times(0)).showGeoExplanation();
@@ -199,11 +204,12 @@ public class MainScreen {
         DatabaseUtils.setAmountOfElementsInDatabase(10);
         WeatherRepository weatherRepository = new TestWeatherRepository(weather, weathers);
         Provider.setWeatherRepository(weatherRepository);
-        presenter.init("ru");
+        presenter.start(false, "ru");
+        //presenter.init("ru");
         presenter.getPlace("ru");
         LocationUtils.setCoordinates(null);
 
-        Mockito.verify(mView, times(1)).showLoading();
+        Mockito.verify(mView, times(2)).showLoading();
         Mockito.verify(mView, times(1)).hideLoading();
         Mockito.verify(mView, times(0)).showError(0);
         Mockito.verify(mView, times(1)).showTodayWeather(weather);

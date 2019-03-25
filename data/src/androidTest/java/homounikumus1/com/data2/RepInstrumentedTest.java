@@ -44,7 +44,8 @@ public class RepInstrumentedTest {
         repository = new WeatherRepository();
 
         RealmConfiguration configuration = new RealmConfiguration.Builder(InstrumentationRegistry.getTargetContext())
-                .schemaVersion(0)
+                .deleteRealmIfMigrationNeeded()
+                //.schemaVersion(1)
                 .rxFactory(new RealmObservableFactory())
                 .build();
         Realm.setDefaultConfiguration(configuration);

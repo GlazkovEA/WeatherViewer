@@ -58,8 +58,6 @@ public class MainScreen {
     @Test
     public void scrollAndProgressBar() throws InterruptedException {
 
-        onView(withId(R.id.progress_bar_bar)).check(matches(isDisplayed()));
-
         synchronized (mActivityRule) {
             mActivityRule.wait(5000);
         }

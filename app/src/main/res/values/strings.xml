@@ -44,4 +44,16 @@
     <string name="week_error">An error occurred while accessing the server, the weather data for the week was not downloaded</string>
     <string name="cities_error">An error occurred while accessing the server, the weather data in the list of your cities were not uploaded</string>
     <string name="time_zone_exception">An error occurred while accessing the server, the data was not received, please try again later</string>
+    <string name="interval">Interval</string>
+    <string name="auto">Automatically</string>
+    <string name="sync_summary">update according to the selected time interval</string>
+    <string name="sync">Synchronization</string>
+    <string name="channel_name">my_channel_02</string>
+    <string name="cities">Cities list</string>
+    <string name="geo">Geolocation</string>
+    <string name="geo_summary">Enable geolocation</string>
+    <string name="notification">Notifications</string>
+    <string name="notification_summary">Weather notifications in the current geolocation in accordance with the selected interval, if geolocation is available</string>
+    <string name="sync_settings">Sync settings</string>
+    <string name="geo_switch_explanetion">Granted permissions can be revoked in device settings</string>
 </resources>

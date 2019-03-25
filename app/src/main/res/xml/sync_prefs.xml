@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="KEY_AUTO_SYNC"
+        android:summary="@string/sync_summary"
+        android:title="@string/auto" />
+
+    <PreferenceCategory
+        android:title="@string/sync_settings"
+        android:dependency="KEY_AUTO_SYNC">
+        <SwitchPreference
+            android:key="KEY_GEO"
+            android:summary="@string/geo_summary"
+            android:title="@string/geo" />
+
+        <SwitchPreference
+            android:id="@+id/geo_switch"
+            android:dependency="KEY_GEO"
+            android:key="KEY_NOTIFICATION"
+            android:summary="@string/notification_summary"
+            android:title="@string/notification" />
+
+        <ListPreference
+            android:defaultValue="@string/auto_sync_interval_default"
+            android:entries="@array/auto_sync_intervals"
+            android:entryValues="@array/auto_sync_interval_values"
+            android:key="KEY_AUTO_SYNC_INTERVAL"
+            android:title="@string/interval" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

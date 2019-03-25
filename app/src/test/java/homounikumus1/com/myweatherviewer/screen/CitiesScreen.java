@@ -53,7 +53,7 @@ public class CitiesScreen {
         WeatherRepository repository = new TestWeatherRepository(new ArrayList<>());
         Provider.setWeatherRepository(repository);
         DatabaseUtils.setCitiesList("");
-        presenter.init();
+       // presenter.init();
         presenter.loadCitesWeather();
         Mockito.verify(clView, times(0)).showCitiesWeather(null);
         Mockito.verify(clView, times(1)).showLoading();
@@ -66,7 +66,7 @@ public class CitiesScreen {
         WeatherRepository repository = new TestWeatherRepository(new ArrayList<>());
         Provider.setWeatherRepository(repository);
         DatabaseUtils.setCitiesList("EKB");
-        presenter.init();
+       // presenter.init();
         presenter.loadCitesWeather();
         Mockito.verify(clView, times(1)).showCitiesWeather(new ArrayList<>());
         Mockito.verify(clView, times(1)).showLoading();
@@ -81,7 +81,7 @@ public class CitiesScreen {
         WeatherRepository repository = new TestWeatherRepository(null);
         Provider.setWeatherRepository(repository);
         DatabaseUtils.setCitiesList("EKB");
-        presenter.init();
+        //presenter.init();
         presenter.loadCitesWeather();
         Mockito.verify(clView, times(0)).showCitiesWeather(new ArrayList<>());
         Mockito.verify(clView, times(1)).showLoading();
