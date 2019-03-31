@@ -57,14 +57,14 @@ public class RxLoader<T> extends Loader<T> {
         Log.d(TAG, "create");
         return Observable.create((ObservableEmitter<T> emitter) -> {
             mEmitter = emitter;
-            mEmitter.setDisposable(disposable);
+           /* mEmitter.setDisposable(disposable);
 
             mEmitter.setCancellable(() -> {
                 if (disposable != null) {
                     disposable.dispose();
                     disposable = null;
                 }
-            });
+            });*/
 
             if (mData != null) mEmitter.onNext(mData);
             if (mIsCompleted) mEmitter.onComplete();
